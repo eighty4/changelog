@@ -1,0 +1,49 @@
+{
+  "name": "@eighty4/changelog",
+  "version": "0.0.1",
+  "type": "module",
+  "author": "Adam McKee <adam.be.g84d@gmail.com>",
+  "repository": "https://github.com/eighty4/changelog",
+  "homepage": "https://github.com/eighty4/changelog",
+  "keywords": [
+    "devops",
+    "cicd",
+    "changelogs",
+    "CHANGELOG.md",
+    "releases"
+  ],
+  "description": "Changelog utilities for CICD",
+  "license": "BSD-2-Clause",
+  "packageManager": "pnpm@10.11.0",
+  "bin": {
+    "changelog": "./lib_js/bin.js"
+  },
+  "exports": {
+    ".": {
+      "bun": "./lib/tasks.ts",
+      "node": "./lib_js/tasks.js"
+    }
+  },
+  "types": "./lib_types",
+  "scripts": {
+    "build": "tsc",
+    "devcheck": "pnpm fmt && pnpm build && pnpm test",
+    "fmt": "prettier --write .",
+    "fmtcheck": "prettier --check .",
+    "test": "node --test lib/**/*.spec.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  },
+  "files": [
+    "lib/*",
+    "lib_js/*",
+    "lib_types/*",
+    "tsconfig.json",
+    "CHANGELOG.md"
+  ]
+}
