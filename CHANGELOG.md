@@ -1,6 +1,8 @@
 ## Unreleased
 
-- ???
+### Fixed
+
+- prevent arg parsing infinite loop when running executable script
 
 ## v0.0.1 - 2025-05-24
 

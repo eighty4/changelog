@@ -13,7 +13,17 @@ if (process.argv.find(a => a === '--debug-args')) {
 }
 
 let args = [...process.argv]
-while (!args.shift()?.endsWith(import.meta.filename)) {}
+let shiftingEntrypoint: string | undefined
+while ((shiftingEntrypoint = args.shift())) {
+    if (
+        typeof shiftingEntrypoint === 'undefined' ||
+        ['changelog', 'bin.ts', 'bin.js'].find(p =>
+            shiftingEntrypoint?.endsWith(p),
+        )
+    ) {
+        break
+    }
+}
 
 if (args.some(arg => arg === '-h' || arg === '--help')) {
     printHelp()
