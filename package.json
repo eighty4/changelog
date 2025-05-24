@@ -1,6 +1,6 @@
 {
   "name": "@eighty4/changelog",
-  "version": "0.0.2-0",
+  "version": "0.0.2-1",
   "type": "module",
   "author": "Adam McKee <adam.be.g84d@gmail.com>",
   "repository": "https://github.com/eighty4/changelog",
@@ -15,9 +15,7 @@
   "description": "Changelog utilities for CICD",
   "license": "BSD-2-Clause",
   "packageManager": "pnpm@10.11.0",
-  "bin": {
-    "changelog": "./lib_js/bin.js"
-  },
+  "bin": "./lib_js/bin.js",
   "exports": {
     ".": {
       "bun": "./lib/tasks.ts",
