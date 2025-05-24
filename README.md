@@ -2,7 +2,7 @@
 
 CICD tasks for CHANGELOG.md.
 
-Read about it on [keepachangelog.com](https://keepachangelog.com/en/1.1.0/).
+Read about changelogs on [keepachangelog.com](https://keepachangelog.com/en/1.1.0/).
 
 ## Installing
 

@@ -1,0 +1,4 @@
+- `changelog new|init` create a CHANGELOG.md
+- `changelog verify` validates format of CHANGELOG.md
+- use changelog verify before each CICD task
+- `changelog notes` templating release notes file
