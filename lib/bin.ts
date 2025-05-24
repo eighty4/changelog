@@ -7,6 +7,11 @@ import {
     getVersionContent,
 } from './tasks.ts'
 
+if (process.argv.find(a => a === '--debug-args')) {
+    console.log(JSON.stringify(process.argv, null, 4))
+    process.exit(0)
+}
+
 let args = [...process.argv]
 while (!args.shift()?.endsWith(import.meta.filename)) {}
 
