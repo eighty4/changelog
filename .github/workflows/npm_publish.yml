@@ -27,7 +27,7 @@ jobs:
           node-version: 23
       - name: changelog entries
         if: ${{ inputs.semver-bump != 'prerelease' }}
-        run: npx @eighty4/changelog check
+        run: node lib/bin.ts check
 
   verify:
     uses: ./.github/workflows/ci_verify.yml
@@ -51,7 +51,7 @@ jobs:
       - if: inputs.semver-bump != 'prerelease'
         env:
           VERSION: ${{ steps.bump.outputs.version }}
-        run: npx @eighty4/changelog rollover "v$VERSION"
+        run: node lib/bin.ts rollover "v$VERSION"
       - id: push
         env:
           GIT_TAG: ${{ steps.bump.outputs.tag }}
@@ -96,13 +96,16 @@ jobs:
         with:
           fetch-tags: true
           ref: ${{ needs.create-git-tag.outputs.tag }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 23
       - id: gen
         env:
           CHANGELOG_TAG: ${{ inputs.semver-bump == 'prerelease' && 'Unreleased' || needs.create-git-tag.outputs.tag }}
           GIT_TAG: ${{ needs.create-git-tag.outputs.tag }}
         run: |
           echo "### Release notes\n" >> release_notes.md
-          npx @eighty4/changelog get "$CHANGELOG_TAG" >> release_notes.md
+          node lib/bin.ts get "$CHANGELOG_TAG" >> release_notes.md
           echo "\n#### Published to npm\n" >> release_notes.md
           echo "[@eighty4/changelog](https://www.npmjs.com/package/@eighty4/changelog/v/${GIT_TAG:1})\n" >> release_notes.md
           RELEASE_NOTES=$(cat release_notes.md | base64 -w 0)
