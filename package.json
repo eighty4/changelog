@@ -15,7 +15,9 @@
   "description": "Changelog utilities for CICD",
   "license": "BSD-2-Clause",
   "packageManager": "pnpm@10.11.0",
-  "bin": "./lib_js/bin.js",
+  "bin": {
+    "changelog": "./lib_js/bin.js"
+  },
   "exports": {
     ".": {
       "bun": "./lib/tasks.ts",
