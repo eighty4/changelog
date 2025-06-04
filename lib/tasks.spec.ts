@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
     checkUnreleased,
+    getCurrentDate,
     getRolloverResult,
     getVersionContent,
 } from './tasks.ts'
@@ -27,7 +28,7 @@ describe('getRolloverResult', () => {
 
 - ???
 
-## v0.0.1 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.1 - ${getCurrentDate()}
 
 ### Added
 
@@ -48,7 +49,7 @@ describe('getRolloverResult', () => {
 
 - did more stuff
 
-## v0.0.1 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.1 - ${getCurrentDate()}
 
 ### Added
 
@@ -65,13 +66,13 @@ describe('getRolloverResult', () => {
 
 - ???
 
-## v0.0.2 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.2 - ${getCurrentDate()}
 
 ### Added
 
 - did more stuff
 
-## v0.0.1 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.1 - ${getCurrentDate()}
 
 ### Added
 
@@ -103,7 +104,7 @@ describe('getRolloverResult', () => {
 
 - ???
 
-## v0.0.1 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.1 - ${getCurrentDate()}
 
 - did some stuff
 
@@ -120,7 +121,7 @@ describe('getRolloverResult', () => {
 
 - did more stuff
 
-## v0.0.1 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.1 - ${getCurrentDate()}
 
 - did some stuff
 
@@ -135,11 +136,11 @@ describe('getRolloverResult', () => {
 
 - ???
 
-## v0.0.2 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.2 - ${getCurrentDate()}
 
 - did more stuff
 
-## v0.0.1 - ${new Date().toISOString().substring(0, 10)}
+## v0.0.1 - ${getCurrentDate()}
 
 - did some stuff
 

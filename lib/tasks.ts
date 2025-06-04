@@ -97,10 +97,7 @@ export function getRolloverResult(
 
     let result = changelogContent.replace(
         /## Unreleased/,
-        '## Unreleased\n\n- ???\n\n## ' +
-            version +
-            ' - ' +
-            new Date().toISOString().substring(0, 10),
+        `## Unreleased\n\n- ???\n\n## ${version} - ${getCurrentDate()}`,
     )
 
     if (
@@ -118,4 +115,11 @@ export function getRolloverResult(
         const previous = `[${version}]: https://github.com/${owner}/${name}/releases/tag/${version}`
         return result.replace(unreleasedLinkRegex, next + '\n' + previous)
     }
+}
+
+export function getCurrentDate(): string {
+    const now = new Date()
+    const offset = now.getTimezoneOffset()
+    const local = new Date(now.getTime() - offset * 60 * 1000)
+    return `${local.getFullYear()}-${String(local.getMonth() + 1).padStart(2, '0')}-${String(local.getDate()).padStart(2, '0')}`
 }
