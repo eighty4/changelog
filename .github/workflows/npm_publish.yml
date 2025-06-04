@@ -103,11 +103,16 @@ jobs:
         env:
           CHANGELOG_TAG: ${{ inputs.semver-bump == 'prerelease' && 'Unreleased' || needs.create-git-tag.outputs.tag }}
           GIT_TAG: ${{ needs.create-git-tag.outputs.tag }}
+          NPM_TAG: ${{ inputs.semver-bump == 'prerelease' && 'next' || 'latest' }}
         run: |
-          echo "### Release notes\n" >> release_notes.md
+          echo "## Release notes" >> release_notes.md
+          echo >> release_notes.md
           node lib/bin.ts get "$CHANGELOG_TAG" >> release_notes.md
-          echo "\n#### Published to npm\n" >> release_notes.md
-          echo "[@eighty4/changelog](https://www.npmjs.com/package/@eighty4/changelog/v/${GIT_TAG:1})\n" >> release_notes.md
+          echo >> release_notes.md
+          echo "#### Published to npm" >> release_notes.md
+          echo >> release_notes.md
+          VERSION=${GIT_TAG:1}
+          echo "[@eighty4/changelog@$NPM_TAG](https://www.npmjs.com/package/@eighty4/changelog/v/$VERSION)" >> release_notes.md
           RELEASE_NOTES=$(cat release_notes.md | base64 -w 0)
           echo "notes=$RELEASE_NOTES" >> "$GITHUB_OUTPUT"
     outputs:
