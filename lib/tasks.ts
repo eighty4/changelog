@@ -6,7 +6,7 @@ export function checkUnreleased(changelogContent: string): boolean {
     if (typeof changelogContent !== 'string' || !changelogContent.length) {
         throw new Error('input must be a string')
     }
-    const notes = /## Unreleased(?<notes>[\s\S]+?)(?=\s+(## |\[))/
+    const notes = /## \[Unreleased\](?<notes>[\s\S]+?)(?=\s+(## |\[))/
         .exec(changelogContent)
         ?.groups?.notes?.trim()
     if (!notes?.length) {
@@ -33,7 +33,7 @@ export function getVersionContent(
                 ' is not a `vX.X.X` format semver or the `Unreleased` label',
         )
     }
-    const versionStartStr = '## ' + version
+    const versionStartStr = `## [${version}]`
     const versionStart = changelogContent.indexOf(versionStartStr)
     if (versionStart === -1) {
         throw new Error(version + ' not found in changelog file')
@@ -96,8 +96,8 @@ export function getRolloverResult(
     } = unreleasedLinkGithubUrlMatch.groups
 
     let result = changelogContent.replace(
-        /## Unreleased/,
-        `## Unreleased\n\n- ???\n\n## ${version} - ${getCurrentDate()}`,
+        /## \[Unreleased\]/,
+        `## [Unreleased]\n\n- ???\n\n## [${version}] - ${getCurrentDate()}`,
     )
 
     if (
@@ -107,8 +107,8 @@ export function getRolloverResult(
         return result
             .replace(/\.\.\.HEAD/, `...${version}`)
             .replace(
-                /\[Unreleased\]/,
-                `[Unreleased]: https://github.com/${owner}/${name}/compare/${version}...HEAD\n[${version}]`,
+                /\[Unreleased\]:/,
+                `[Unreleased]: https://github.com/${owner}/${name}/compare/${version}...HEAD\n[${version}]:`,
             )
     } else {
         const next = `[Unreleased]: https://github.com/${owner}/${name}/compare/${version}...HEAD`

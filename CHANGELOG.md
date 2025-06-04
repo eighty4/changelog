@@ -1,18 +1,19 @@
 # Changelog
 
-## Unreleased
+## [Unreleased]
 
 ### Fixed
 
 - rollover writes local date instead of utc
+- support github links in version headers
 
-## v0.0.2 - 2025-05-24
+## [v0.0.2] - 2025-05-24
 
 ### Fixed
 
 - prevent arg parsing infinite loop when running executable script
 
-## v0.0.1 - 2025-05-24
+## [v0.0.1] - 2025-05-24
 
 ### Added
 

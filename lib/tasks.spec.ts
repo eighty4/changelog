@@ -12,7 +12,7 @@ describe('getRolloverResult', () => {
         it('adds first tag', () => {
             const tag = 'v0.0.1'
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -24,11 +24,11 @@ describe('getRolloverResult', () => {
             assert.equal(
                 getRolloverResult(s, tag),
                 `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 - ${getCurrentDate()}
+## [v0.0.1] - ${getCurrentDate()}
 
 ### Added
 
@@ -43,13 +43,13 @@ describe('getRolloverResult', () => {
         it('adds another tag', () => {
             const tag = 'v0.0.2'
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
 - did more stuff
 
-## v0.0.1 - ${getCurrentDate()}
+## [v0.0.1] - ${getCurrentDate()}
 
 ### Added
 
@@ -62,17 +62,17 @@ describe('getRolloverResult', () => {
             assert.equal(
                 getRolloverResult(s, tag),
                 `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.2 - ${getCurrentDate()}
+## [v0.0.2] - ${getCurrentDate()}
 
 ### Added
 
 - did more stuff
 
-## v0.0.1 - ${getCurrentDate()}
+## [v0.0.1] - ${getCurrentDate()}
 
 ### Added
 
@@ -90,7 +90,7 @@ describe('getRolloverResult', () => {
         it('adds first tag', () => {
             const tag = 'v0.0.1'
             const s = `
-## Unreleased
+## [Unreleased]
 
 - did some stuff
 
@@ -100,11 +100,11 @@ describe('getRolloverResult', () => {
             assert.equal(
                 getRolloverResult(s, tag),
                 `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 - ${getCurrentDate()}
+## [v0.0.1] - ${getCurrentDate()}
 
 - did some stuff
 
@@ -117,11 +117,11 @@ describe('getRolloverResult', () => {
         it('adds another tag', () => {
             const tag = 'v0.0.2'
             const s = `
-## Unreleased
+## [Unreleased]
 
 - did more stuff
 
-## v0.0.1 - ${getCurrentDate()}
+## [v0.0.1] - ${getCurrentDate()}
 
 - did some stuff
 
@@ -132,15 +132,15 @@ describe('getRolloverResult', () => {
             assert.equal(
                 getRolloverResult(s, tag),
                 `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.2 - ${getCurrentDate()}
+## [v0.0.2] - ${getCurrentDate()}
 
 - did more stuff
 
-## v0.0.1 - ${getCurrentDate()}
+## [v0.0.1] - ${getCurrentDate()}
 
 - did some stuff
 
@@ -179,14 +179,14 @@ describe('getVersionContent', () => {
 
         it('gets Unreleased notes until prev version', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
 - big feature
 - a bug
 
-## v0.0.1
+## [v0.0.1]
 
 - mo' bugs
 - mo' problems
@@ -201,7 +201,7 @@ describe('getVersionContent', () => {
 
         it('gets Unreleased without a prev version', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -218,7 +218,7 @@ describe('getVersionContent', () => {
 
         it('gets Unreleased notes until EOF', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -233,11 +233,11 @@ describe('getVersionContent', () => {
 
         it('gets version without date', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 
+## [v0.0.1]
 
 ### Added
 
@@ -254,11 +254,11 @@ describe('getVersionContent', () => {
 
         it('gets version with date', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 ### Added
 
@@ -275,13 +275,13 @@ describe('getVersionContent', () => {
 
         it('returns empty string when Unreleased teaser present', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
 - ???
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 - big feature
 - a bug
@@ -293,11 +293,11 @@ describe('getVersionContent', () => {
 
         it('filters out empty change categories', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 ### Added
 
@@ -317,11 +317,11 @@ describe('getVersionContent', () => {
 
         it('returns empty string when Unreleased empty', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 ### Added
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 - big feature
 - a bug
@@ -347,12 +347,12 @@ describe('getVersionContent', () => {
 
         it('gets Unreleased notes until prev version', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - big feature
 - a bug
 
-## v0.0.1
+## [v0.0.1]
 
 - mo' bugs
 - mo' problems
@@ -367,7 +367,7 @@ describe('getVersionContent', () => {
 
         it('gets Unreleased without a prev version', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - big feature
 - a bug
@@ -382,7 +382,7 @@ describe('getVersionContent', () => {
 
         it('gets Unreleased notes until EOF', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - big feature
 - a bug
@@ -395,11 +395,11 @@ describe('getVersionContent', () => {
 
         it('gets version without date', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 
+## [v0.0.1]
 
 - big feature
 - a bug
@@ -414,11 +414,11 @@ describe('getVersionContent', () => {
 
         it('gets version with date', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 - big feature
 - a bug
@@ -433,11 +433,11 @@ describe('getVersionContent', () => {
 
         it('returns empty string when Unreleased teaser present', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 - big feature
 - a bug
@@ -449,9 +449,9 @@ describe('getVersionContent', () => {
 
         it('returns empty string when Unreleased empty', () => {
             const s = `
-## Unreleased
+## [Unreleased]
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 - big feature
 - a bug
@@ -464,11 +464,11 @@ describe('getVersionContent', () => {
 
     it('throws when version is not present', () => {
         const s = `
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## v0.0.1 - 2025-04-21 
+## [v0.0.1] - 2025-04-21 
 
 - big feature
 - a bug
@@ -484,7 +484,7 @@ describe('checkUnreleased', () => {
         it('returns true', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -499,7 +499,7 @@ describe('checkUnreleased', () => {
         it('returns false', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -514,7 +514,7 @@ describe('checkUnreleased', () => {
         it('returns false with only ??? teaser', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -531,7 +531,7 @@ describe('checkUnreleased', () => {
         it('returns true', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 - Area 51 photos
 
@@ -544,7 +544,7 @@ describe('checkUnreleased', () => {
         it('returns false', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 [Unreleased]: ...
 `),
@@ -555,7 +555,7 @@ describe('checkUnreleased', () => {
         it('returns false with only ??? teaser', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 - ???
 [Unreleased]: ...
 `),
@@ -568,11 +568,11 @@ describe('checkUnreleased', () => {
         it('returns true', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 - Area 51 photos
 
-## 0.0.2
+## [0.0.2]
 
 [Unreleased]: ...
 `),
@@ -583,9 +583,9 @@ describe('checkUnreleased', () => {
         it('returns false', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
-## 0.0.2
+## [0.0.2]
 
 [Unreleased]: ...
 `),
@@ -596,11 +596,11 @@ describe('checkUnreleased', () => {
         it('returns false with only ??? teaser', () => {
             assert.equal(
                 checkUnreleased(`
-## Unreleased
+## [Unreleased]
 
 - ???
 
-## 0.0.2
+## [0.0.2]
 
 [Unreleased]: ...
 `),
