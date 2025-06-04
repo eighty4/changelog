@@ -125,7 +125,7 @@ jobs:
       contents: write
     secrets: inherit
     with:
-      title: 'changelog ${{ needs.create-git-tag.outputs.tag }}'
+      title: '${{ needs.create-git-tag.outputs.tag }}'
       release_notes: ${{ needs.create-release-notes.outputs.notes }}
       prerelease: ${{ inputs.semver-bump == 'prerelease' && 'true' || 'false' }}
       latest: ${{ inputs.semver-bump == 'prerelease' && 'false' || 'true' }}
