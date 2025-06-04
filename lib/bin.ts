@@ -61,10 +61,12 @@ switch (args.shift()) {
 
 function printHelp(error?: string): never {
     if (error) console.error(error)
-    console.log('changelog check [--changelog-file CHANGELOG_FILE]')
-    console.log('changelog get VERSION [--changelog-file CHANGELOG_FILE]')
+    const changelog = '\u001b[1mchangelog\u001b[0m'
+    console.log(changelog, 'check [--changelog-file CHANGELOG_FILE]')
+    console.log(changelog, 'get VERSION [--changelog-file CHANGELOG_FILE]')
     console.log(
-        'changelog rollover NEXT_VERSION [--changelog-file CHANGELOG_FILE]',
+        changelog,
+        'rollover NEXT_VERSION [--changelog-file CHANGELOG_FILE]',
     )
     process.exit(1)
 }
