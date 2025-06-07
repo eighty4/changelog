@@ -13,6 +13,9 @@ npm i -g @eighty4/changelog
 ## CICD tasks
 
 ```bash
+# create a new CHANGELOG.md
+changelog new --repo eighty4/c2 > CHANGELOG.md
+
 # exit 1 if section `## [Unreleased]` is empty
 changelog check [--changelog-file CHANGELOG_FILE]
 
