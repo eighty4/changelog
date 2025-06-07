@@ -114,7 +114,7 @@ jobs:
 
           echo "## Release notes" >> release_notes.md
           echo >> release_notes.md
-          bunx lib/bin.ts get "$CHANGELOG_TAG" >> release_notes.md
+          node lib/bin.ts get "$CHANGELOG_TAG" >> release_notes.md
           echo >> release_notes.md
 
           RELEASE_NOTES=$(cat release_notes.md | base64 -w 0)
