@@ -105,14 +105,18 @@ jobs:
           GIT_TAG: ${{ needs.create-git-tag.outputs.tag }}
           NPM_TAG: ${{ inputs.semver-bump == 'prerelease' && 'next' || 'latest' }}
         run: |
+          PKG_NAME=$(cat package.json | jq -r ".name")
+          VERSION=${GIT_TAG:1}
+          echo "#### Published to npm as [$PKG_NAME](https://www.npmjs.com/package/$PKG_NAME/v/$VERSION)" >> release_notes.md
+          echo >> release_notes.md
+          echo "\`\`\`npm i -g $PKG_NAME@$NPM_TAG\`\`\`" >> release_notes.md
+          echo >> release_notes.md
+
           echo "## Release notes" >> release_notes.md
           echo >> release_notes.md
-          node lib/bin.ts get "$CHANGELOG_TAG" >> release_notes.md
+          bunx lib/bin.ts get "$CHANGELOG_TAG" >> release_notes.md
           echo >> release_notes.md
-          echo "#### Published to npm" >> release_notes.md
-          echo >> release_notes.md
-          VERSION=${GIT_TAG:1}
-          echo "[@eighty4/changelog@$NPM_TAG](https://www.npmjs.com/package/@eighty4/changelog/v/$VERSION)" >> release_notes.md
+
           RELEASE_NOTES=$(cat release_notes.md | base64 -w 0)
           echo "notes=$RELEASE_NOTES" >> "$GITHUB_OUTPUT"
     outputs:
