@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
 import { readFile, writeFile } from 'node:fs/promises'
+import { CliError } from './error.ts'
 import {
     checkUnreleased,
     getRolloverResult,
     getVersionContent,
 } from './tasks.ts'
+import { makeNewChangelog } from './task.new.ts'
 
 if (process.argv.find(a => a === '--debug-args')) {
     console.log(JSON.stringify(process.argv, null, 4))
@@ -52,21 +54,31 @@ switch (args.shift()) {
     case 'get':
         task = { type: 'get', version: expectVersionNext() }
         break
+    case 'init':
+    case 'new':
+        try {
+            console.log(makeNewChangelog(args))
+            process.exit(0)
+        } catch (e: unknown) {
+            errorExit(e)
+        }
     case 'rollover':
         task = { type: 'rollover', version: expectVersionNext() }
         break
     default:
-        printHelp()
+        printHelp('missing command')
 }
 
 function printHelp(error?: string): never {
-    if (error) console.error(error)
-    const changelog = '\u001b[1mchangelog\u001b[0m'
-    console.log(changelog, 'check [--changelog-file CHANGELOG_FILE]')
-    console.log(changelog, 'get VERSION [--changelog-file CHANGELOG_FILE]')
+    if (error) printError(error)
+    const bold = (s: string) => `\u001b[1m${s}\u001b[0m`
+    console.log(`changelog check [--changelog-file CHANGELOG_FILE]`)
     console.log(
-        changelog,
-        'rollover NEXT_VERSION [--changelog-file CHANGELOG_FILE]',
+        `changelog get ${bold('VERSION')} [--changelog-file CHANGELOG_FILE]`,
+    )
+    console.log(`changelog new ${bold('--repo OWNER/NAME')}`)
+    console.log(
+        `changelog rollover ${bold('NEXT_VERSION')} [--changelog-file CHANGELOG_FILE]`,
     )
     process.exit(1)
 }
@@ -93,10 +105,15 @@ let changelogContent: string
 try {
     changelogContent = await readFile(changelogPath, 'utf-8')
 } catch (e: unknown) {
-    if (isError(e) && 'code' in e && e.code === 'ENOENT') {
+    if (
+        e !== null &&
+        e instanceof Error &&
+        'code' in e &&
+        e.code === 'ENOENT'
+    ) {
         errorExit(changelogPath + ' does not exist')
     } else {
-        onCatch(e)
+        errorExit(e)
     }
 }
 
@@ -106,30 +123,32 @@ if (task.type === 'check') {
     try {
         console.log(getVersionContent(changelogContent, task.version))
     } catch (e) {
-        onCatch(e)
+        errorExit(e)
     }
 } else if (task.type === 'rollover') {
     try {
         const result = getRolloverResult(changelogContent, task.version)
         await writeFile(changelogPath, result)
     } catch (e: unknown) {
-        onCatch(e)
+        errorExit(e)
     }
 }
 
-function errorExit(error?: string): never {
-    if (error) console.error(error)
+function printError(e: unknown) {
+    if (e !== null) {
+        const red = (s: string) => `\u001b[31m${s}\u001b[0m`
+        if (typeof e === 'string') {
+            console.error(red('error:'), e)
+        } else if (e instanceof Error) {
+            console.error(red('error:'), e.message)
+            if (e instanceof CliError) {
+                console.log('changelog -h for more details')
+            }
+        }
+    }
+}
+
+function errorExit(e?: unknown): never {
+    printError(e)
     process.exit(1)
-}
-
-function onCatch(e: unknown): never {
-    if (isError(e)) {
-        errorExit(e.message)
-    } else {
-        throw e
-    }
-}
-
-function isError(e: unknown): e is Error {
-    return e !== null && typeof e === 'object'
 }
