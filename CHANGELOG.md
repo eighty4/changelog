@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-- ???
+### Added
+
+- `changelog new` outputs new CHANGELOG.md to console
 
 ## [v0.0.3] - 2025-06-04
 
