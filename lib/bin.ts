@@ -2,12 +2,10 @@
 
 import { readFile, writeFile } from 'node:fs/promises'
 import { CliError } from './error.ts'
-import {
-    checkUnreleased,
-    getRolloverResult,
-    getVersionContent,
-} from './tasks.ts'
+import { checkUnreleased } from './task.check.ts'
+import { getVersionContent } from './task.get.ts'
 import { makeNewChangelog } from './task.new.ts'
+import { getRolloverResult } from './task.rollover.ts'
 
 if (process.argv.find(a => a === '--debug-args')) {
     console.log(JSON.stringify(process.argv, null, 4))
@@ -27,16 +25,18 @@ while ((shiftingEntrypoint = args.shift())) {
     }
 }
 
+type Task =
+    | { type: 'check' }
+    | { type: 'get'; version: string }
+    | { type: 'new' }
+    | { type: 'rollover'; version: string }
+
+let task: Task | undefined = undefined
+
 if (args.some(arg => arg === '-h' || arg === '--help')) {
     printHelp()
 }
 
-type Task =
-    | { type: 'check' }
-    | { type: 'get'; version: string }
-    | { type: 'rollover'; version: string }
-
-let task: Task
 let changelogPath: string = 'CHANGELOG.md'
 
 function expectVersionNext(): string | never {
@@ -47,44 +47,62 @@ function expectVersionNext(): string | never {
     return version
 }
 
-switch (args.shift()) {
+let shifted: string | undefined
+switch ((shifted = args.shift())) {
+    case 'init':
+    case 'new':
+        task = { type: 'new' }
+        break
     case 'check':
         task = { type: 'check' }
         break
     case 'get':
         task = { type: 'get', version: expectVersionNext() }
         break
-    case 'init':
-    case 'new':
-        try {
-            console.log(makeNewChangelog(args))
-            process.exit(0)
-        } catch (e: unknown) {
-            errorExit(e)
-        }
     case 'rollover':
         task = { type: 'rollover', version: expectVersionNext() }
         break
     default:
-        printHelp('missing command')
+        if (typeof shifted === 'undefined') {
+            printHelp('missing command')
+        } else {
+            printHelp(shifted + " isn't a command")
+        }
+}
+
+if (task.type === 'new') {
+    try {
+        console.log(makeNewChangelog(args))
+        process.exit(0)
+    } catch (e: unknown) {
+        errorExit(e)
+    }
 }
 
 function printHelp(error?: string): never {
     if (error) printError(error)
     const bold = (s: string) => `\u001b[1m${s}\u001b[0m`
-    console.log(`changelog check [--changelog-file CHANGELOG_FILE]`)
-    console.log(
-        `changelog get ${bold('VERSION')} [--changelog-file CHANGELOG_FILE]`,
-    )
-    console.log(`changelog new ${bold('--repo OWNER/NAME')}`)
-    console.log(
-        `changelog rollover ${bold('NEXT_VERSION')} [--changelog-file CHANGELOG_FILE]`,
-    )
+    if (!task || task.type === 'check') {
+        console.log(`changelog check [--changelog-file CHANGELOG_FILE]`)
+    }
+    if (!task || task.type === 'get') {
+        console.log(
+            `changelog get ${bold('VERSION')} [--changelog-file CHANGELOG_FILE]`,
+        )
+    }
+    if (!task || task.type === 'new') {
+        console.log(`changelog new ${bold('--repo OWNER/NAME')}`)
+    }
+    if (!task || task.type === 'rollover') {
+        console.log(
+            `changelog rollover ${bold('NEXT_VERSION')} [--changelog-file CHANGELOG_FILE]`,
+        )
+    }
     process.exit(1)
 }
 
 while (args.length) {
-    switch (args.shift()) {
+    switch ((shifted = args.shift())) {
         case '--changelog-file':
             const shiftedChangelogFile = args.shift()
             if (
@@ -97,7 +115,7 @@ while (args.length) {
             }
             break
         default:
-            throw new Error()
+            printHelp(`bad arg ${shifted}`)
     }
 }
 
