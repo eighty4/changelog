@@ -8,7 +8,7 @@ on:
         description: Semver bump release type
         required: true
         type: choice
-        default: patch
+        default: prerelease
         options:
           - major
           - minor
