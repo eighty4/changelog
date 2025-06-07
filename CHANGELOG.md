@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- ???
+
+## [v0.0.4] - 2025-06-07
+
 ### Added
 
 - `changelog new` outputs new CHANGELOG.md to console
@@ -27,7 +31,8 @@
 - `changelog get VERSION` retrieves release notes for `VERSION`
 - `changelog rollover NEXT_VERSION` creates a new unreleased section and relabels unreleased changes with `NEXT_VERSION`
 
-[Unreleased]: https://github.com/eighty4/changelog/compare/v0.0.3...HEAD
+[Unreleased]: https://github.com/eighty4/changelog/compare/v0.0.4...HEAD
+[v0.0.4]: https://github.com/eighty4/changelog/compare/v0.0.3...v0.0.4
 [v0.0.3]: https://github.com/eighty4/changelog/compare/v0.0.2...v0.0.3
 [v0.0.2]: https://github.com/eighty4/changelog/compare/v0.0.1...v0.0.2
 [v0.0.1]: https://github.com/eighty4/changelog/releases/tag/v0.0.1
