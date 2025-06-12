@@ -53,11 +53,11 @@ export async function nextVersionRollover(args: Array<string>): Promise<void> {
     const unreleasedLink =
         changelogContent.match(unreleasedLinkRegex)?.groups?.url
     if (!unreleasedLink) {
-        throw new Error()
+        throw new Error('Unreleased url is missing')
     }
     const unreleasedLinkGithubUrlMatch = unreleasedLink.match(githubUrlRegex)
     if (!unreleasedLinkGithubUrlMatch?.groups) {
-        throw new Error()
+        throw new Error('Unreleased url is malformed')
     }
     const {
         owner,

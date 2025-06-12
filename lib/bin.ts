@@ -64,7 +64,7 @@ try {
             console.log(makeNewChangelog(args))
             process.exit(0)
         case 'rollover':
-            nextVersionRollover(args)
+            await nextVersionRollover(args)
             process.exit(0)
     }
 } catch (e: unknown) {
