@@ -1,15 +1,52 @@
+import { writeFile } from 'node:fs/promises'
+import { CliError } from './error.ts'
+import { readChangelogFile } from './readChangelog.ts'
 import { isSemverVersion } from './semver.ts'
 
-export function getRolloverResult(
-    changelogContent: string,
-    version: string,
-): string {
-    if (typeof changelogContent !== 'string' || !changelogContent.length) {
-        throw new TypeError('input must be a string')
+export type RolloverOpts = {
+    changelogFile: string
+    gitTag: string
+    nextVersion: string
+}
+
+export function parseArgs(args: Array<string>): RolloverOpts {
+    const nextVersion = args.shift()
+    if (typeof nextVersion === 'undefined') {
+        throw new CliError('missing version')
     }
-    if (!isSemverVersion(version)) {
-        throw new TypeError(version + ' is not a `vX.X.X` format semver')
+    if (!isSemverVersion(nextVersion)) {
+        throw new CliError(nextVersion + ' is not a `vX.X.X` format semver')
     }
+    const opts: RolloverOpts = {
+        changelogFile: 'CHANGELOG.md',
+        gitTag: nextVersion,
+        nextVersion,
+    }
+    let shifted
+    while ((shifted = args.shift())) {
+        switch (shifted) {
+            case '--changelog-file':
+                if (typeof (shifted = args.shift()) === 'undefined') {
+                    throw new CliError('--changelog-file value is missing')
+                }
+                opts.changelogFile = shifted
+                break
+            case '--git-tag':
+                if (typeof (shifted = args.shift()) === 'undefined') {
+                    throw new CliError('--git-tag value is missing')
+                }
+                opts.gitTag = shifted
+                break
+            default:
+                throw new CliError(`bad arg \`${shifted}\``)
+        }
+    }
+    return opts
+}
+
+export async function nextVersionRollover(args: Array<string>): Promise<void> {
+    const opts = parseArgs(args)
+    const changelogContent = await readChangelogFile(opts.changelogFile)
     const unreleasedLinkRegex = /^.*\[Unreleased\]:\s+?(?<url>.*)$/m
     const githubUrlRegex =
         /^https:\/\/github\.com\/(?<owner>\S+?)\/(?<name>\S+?)\/(?<path>.*)$/
@@ -30,24 +67,25 @@ export function getRolloverResult(
 
     let result = changelogContent.replace(
         /## \[Unreleased\]/,
-        `## [Unreleased]\n\n- ???\n\n## [${version}] - ${getCurrentDate()}`,
+        `## [Unreleased]\n\n- ???\n\n## [${opts.nextVersion}] - ${getCurrentDate()}`,
     )
 
     if (
         unreleasedGitHubUrlPath.startsWith('compare/') &&
         unreleasedGitHubUrlPath.endsWith('...HEAD')
     ) {
-        return result
-            .replace(/\.\.\.HEAD/, `...${version}`)
+        result = result
+            .replace(/\.\.\.HEAD/, `...${opts.gitTag}`)
             .replace(
                 /\[Unreleased\]:/,
-                `[Unreleased]: https://github.com/${owner}/${name}/compare/${version}...HEAD\n[${version}]:`,
+                `[Unreleased]: https://github.com/${owner}/${name}/compare/${opts.gitTag}...HEAD\n[${opts.nextVersion}]:`,
             )
     } else {
-        const next = `[Unreleased]: https://github.com/${owner}/${name}/compare/${version}...HEAD`
-        const previous = `[${version}]: https://github.com/${owner}/${name}/releases/tag/${version}`
-        return result.replace(unreleasedLinkRegex, next + '\n' + previous)
+        const next = `[Unreleased]: https://github.com/${owner}/${name}/compare/${opts.gitTag}...HEAD`
+        const previous = `[${opts.nextVersion}]: https://github.com/${owner}/${name}/releases/tag/${opts.gitTag}`
+        result = result.replace(unreleasedLinkRegex, next + '\n' + previous)
     }
+    await writeFile(opts.changelogFile, result)
 }
 
 export function getCurrentDate(): string {

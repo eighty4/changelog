@@ -1,12 +1,74 @@
 import assert from 'node:assert/strict'
-import { describe, it } from 'node:test'
-import { checkUnreleased } from './task.check.ts'
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, beforeEach, describe, it } from 'node:test'
+import { CliError } from './error.ts'
+import { checkUnreleased, parseArgs } from './task.check.ts'
 
-describe('checkUnreleased', () => {
-    describe('with change categories', () => {
-        it('returns true', () => {
-            assert.equal(
-                checkUnreleased(`
+async function makeTempDir(): Promise<string> {
+    return await mkdtemp(join(tmpdir(), 'changelog-test-'))
+}
+
+async function removeDir(p: string): Promise<void> {
+    await rm(p, { force: true, recursive: true })
+}
+
+describe('changelog check', () => {
+    describe('parseArgs', () => {
+        it('err with --changelog-file missing value', () => {
+            assert.throws(
+                () => parseArgs(['--changelog-file']),
+                e =>
+                    e instanceof CliError &&
+                    e.message === '--changelog-file value is missing',
+            )
+        })
+        it('err with unknown arg', () => {
+            assert.throws(
+                () => parseArgs(['--coffee']),
+                e =>
+                    e instanceof CliError && e.message === 'bad arg `--coffee`',
+            )
+        })
+        it('parses empty args', () => {
+            assert.deepEqual(parseArgs([]), {
+                changelogFile: 'CHANGELOG.md',
+            })
+        })
+        it('parses args with changelog file', () => {
+            assert.deepEqual(
+                parseArgs(['--changelog-file', 'cli/CHANGELOG.md']),
+                {
+                    changelogFile: 'cli/CHANGELOG.md',
+                },
+            )
+        })
+    })
+
+    describe('checkUnreleased', () => {
+        let tmpDir: string
+
+        beforeEach(async () => {
+            tmpDir = await makeTempDir()
+        })
+
+        afterEach(async () => removeDir(tmpDir))
+
+        async function makeFile(
+            filename: string,
+            content: string,
+        ): Promise<string> {
+            const p = join(tmpDir, filename)
+            await writeFile(p, content)
+            return p
+        }
+
+        describe('with change categories', () => {
+            it('returns true', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 ### Added
@@ -14,14 +76,18 @@ describe('checkUnreleased', () => {
 - Area 51 photos
 
 [Unreleased]: ...
-`),
-                true,
-            )
-        })
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    true,
+                )
+            })
 
-        it('returns false', () => {
-            assert.equal(
-                checkUnreleased(`
+            it('returns false', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 ### Added
@@ -29,14 +95,18 @@ describe('checkUnreleased', () => {
 ### Changed
 
 [Unreleased]: ...
-`),
-                false,
-            )
-        })
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    false,
+                )
+            })
 
-        it('returns false with only ??? teaser', () => {
-            assert.equal(
-                checkUnreleased(`
+            it('returns false with only ??? teaser', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 ### Added
@@ -44,53 +114,69 @@ describe('checkUnreleased', () => {
 - ???
 
 [Unreleased]: ...
-`),
-                false,
-            )
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    false,
+                )
+            })
         })
-    })
 
-    describe('without change categories', () => {
-        it('returns true', () => {
-            assert.equal(
-                checkUnreleased(`
+        describe('without change categories', () => {
+            it('returns true', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 - Area 51 photos
 
 [Unreleased]: ...
-`),
-                true,
-            )
-        })
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    true,
+                )
+            })
 
-        it('returns false', () => {
-            assert.equal(
-                checkUnreleased(`
+            it('returns false', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 [Unreleased]: ...
-`),
-                false,
-            )
-        })
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    false,
+                )
+            })
 
-        it('returns false with only ??? teaser', () => {
-            assert.equal(
-                checkUnreleased(`
+            it('returns false with only ??? teaser', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 - ???
 [Unreleased]: ...
-`),
-                false,
-            )
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    false,
+                )
+            })
         })
-    })
 
-    describe('with prior version', () => {
-        it('returns true', () => {
-            assert.equal(
-                checkUnreleased(`
+        describe('with prior version', () => {
+            it('returns true', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 - Area 51 photos
@@ -98,27 +184,35 @@ describe('checkUnreleased', () => {
 ## [0.0.2]
 
 [Unreleased]: ...
-`),
-                true,
-            )
-        })
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    true,
+                )
+            })
 
-        it('returns false', () => {
-            assert.equal(
-                checkUnreleased(`
+            it('returns false', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 ## [0.0.2]
 
 [Unreleased]: ...
-`),
-                false,
-            )
-        })
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    false,
+                )
+            })
 
-        it('returns false with only ??? teaser', () => {
-            assert.equal(
-                checkUnreleased(`
+            it('returns false with only ??? teaser', async () => {
+                const p = await makeFile(
+                    'CHANGELOG.md',
+                    `
 ## [Unreleased]
 
 - ???
@@ -126,9 +220,13 @@ describe('checkUnreleased', () => {
 ## [0.0.2]
 
 [Unreleased]: ...
-`),
-                false,
-            )
+`,
+                )
+                assert.equal(
+                    await checkUnreleased(['--changelog-file', p]),
+                    false,
+                )
+            })
         })
     })
 })

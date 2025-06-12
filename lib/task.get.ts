@@ -1,22 +1,47 @@
+import { CliError } from './error.ts'
+import { readChangelogFile } from './readChangelog.ts'
 import { isSemverVersion } from './semver.ts'
 
-export function getVersionContent(
-    changelogContent: string,
-    version: string,
-): string {
-    if (typeof changelogContent !== 'string' || !changelogContent.length) {
-        throw new TypeError('input must be a string')
+export type GetContentOpts = {
+    changelogFile: string
+    version: string
+}
+
+export function parseArgs(args: Array<string>): GetContentOpts {
+    const version = args.shift()
+    if (typeof version === 'undefined') {
+        throw new CliError('missing version')
     }
     if (version !== 'Unreleased' && !isSemverVersion(version)) {
-        throw new TypeError(
-            version +
-                ' is not a `vX.X.X` format semver or the `Unreleased` label',
-        )
+        throw new CliError(version + ' is not a `vX.X.X` format semver')
     }
-    const versionStartStr = `## [${version}]`
+    const opts: GetContentOpts = {
+        changelogFile: 'CHANGELOG.md',
+        version,
+    }
+    let shifted
+    while ((shifted = args.shift())) {
+        switch (shifted) {
+            case '--changelog-file':
+                if (typeof (shifted = args.shift()) === 'undefined') {
+                    throw new CliError('--changelog-file value is missing')
+                }
+                opts.changelogFile = shifted
+                break
+            default:
+                throw new CliError(`bad arg \`${shifted}\``)
+        }
+    }
+    return opts
+}
+
+export async function getVersionContent(args: Array<string>): Promise<string> {
+    const opts = parseArgs(args)
+    const changelogContent = await readChangelogFile(opts.changelogFile)
+    const versionStartStr = `## [${opts.version}]`
     const versionStart = changelogContent.indexOf(versionStartStr)
     if (versionStart === -1) {
-        throw new Error(version + ' not found in changelog file')
+        throw new Error(opts.version + ' not found')
     }
     const notesStart = changelogContent.indexOf('\n', versionStart)
     let notesEnd = changelogContent.indexOf('\n## ', notesStart)
@@ -32,20 +57,21 @@ export function getVersionContent(
     }
     let result = ''
     let categoryLines: Array<string> = []
+    const mergeCategoryIntoResult = () => {
+        if (categoryLines.some(l => l.startsWith('-'))) {
+            result += categoryLines.join('\n')
+        }
+    }
     for (const l of notes.split(/\r?\n/).map(l => l.trim())) {
-        if (version === 'Unreleased' && l === '- ???') {
+        if (opts.version === 'Unreleased' && l === '- ???') {
             continue
         }
         if (l.startsWith('### ')) {
-            if (categoryLines.some(l => l.startsWith('-'))) {
-                result += categoryLines.join('\n')
-            }
+            mergeCategoryIntoResult()
             categoryLines = []
         }
         categoryLines.push(l)
     }
-    if (categoryLines.some(l => l.startsWith('-'))) {
-        result += categoryLines.join('\n')
-    }
+    mergeCategoryIntoResult()
     return result
 }

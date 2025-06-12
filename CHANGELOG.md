@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-- ???
+### Added
+
+- `changelog rollover` supports distinct git tag from semver version with `--git-tag`
 
 ## [v0.0.4] - 2025-06-07
 
