@@ -8,6 +8,8 @@
   tasks
 - Reporting for CHANGELOG.md errors include line numbers, excerpts and
   correction suggestions
+- `changelog rollover` will preserve consistent Markdown list notation with
+  the user's existing CHANGELOG.md content
 
 ## [v0.0.5] - 2025-06-12
 
