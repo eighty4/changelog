@@ -30,7 +30,10 @@
     "devcheck": "pnpm fmt && pnpm build && pnpm test",
     "fmt": "prettier --write .",
     "fmtcheck": "prettier --check .",
-    "test": "node --test lib/**/*.spec.ts",
+    "test": "pnpm test:unit && pnpm test:gold",
+    "test:unit": "node --test lib/**/*.spec.ts",
+    "test:gold": "cd gold && ./verify.sh",
+    "test:gold:update": "cd gold && ./update.sh",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {},

@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
-import { CliError } from './error.ts'
+import { CliError } from './errors.ts'
 import {
     getCurrentDate,
     nextVersionRollover,
@@ -251,6 +251,44 @@ describe('changelog rollover', () => {
             })
         })
 
+        describe('inspect changelog for list marker', () => {
+            for (const listMarker of ['*', '-', '+']) {
+                it(`uses ${listMarker}`, async () => {
+                    const p = await makeFile(
+                        'CHANGELOG.md',
+                        `
+## [Unreleased]
+
+### Added
+
+${listMarker} did more stuff
+
+[Unreleased]: https://github.com/eighty4/c2/commits/main
+`,
+                    )
+
+                    await nextVersionRollover(['v0.0.1', '--changelog-file', p])
+                    assert.equal(
+                        await readFile(p, 'utf-8'),
+                        `
+## [Unreleased]
+
+${listMarker} ???
+
+## [v0.0.1] - ${getCurrentDate()}
+
+### Added
+
+${listMarker} did more stuff
+
+[Unreleased]: https://github.com/eighty4/c2/compare/v0.0.1...HEAD
+[v0.0.1]: https://github.com/eighty4/c2/releases/tag/v0.0.1
+`,
+                    )
+                })
+            }
+        })
+
         describe('git tag distinct from version', () => {
             it('add first tag', async () => {
                 const version = 'v0.0.1'
@@ -292,6 +330,7 @@ describe('changelog rollover', () => {
 `,
                 )
             })
+
             it('add new tag', async () => {
                 const version = 'v0.0.2'
                 const p = await makeFile(

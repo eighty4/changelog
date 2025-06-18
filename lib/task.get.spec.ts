@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
-import { CliError } from './error.ts'
+import { CliError } from './errors.ts'
 import { getVersionContent, parseArgs } from './task.get.ts'
 
 async function makeTempDir(): Promise<string> {
@@ -211,7 +211,7 @@ describe('changelog get', () => {
 
 - ???
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 ### Added
 

@@ -1,5 +1,6 @@
 import { writeFile } from 'node:fs/promises'
-import { CliError } from './error.ts'
+import { BadChangelogError, CliError } from './errors.ts'
+import { inspectChangelog } from './inspect.ts'
 import { readChangelogFile } from './readChangelog.ts'
 import { isSemverVersion } from './semver.ts'
 
@@ -47,6 +48,10 @@ export function parseArgs(args: Array<string>): RolloverOpts {
 export async function nextVersionRollover(args: Array<string>): Promise<void> {
     const opts = parseArgs(args)
     const changelogContent = await readChangelogFile(opts.changelogFile)
+    const inspectResult = inspectChangelog(changelogContent)
+    if (inspectResult.errors.length) {
+        throw new BadChangelogError(opts.changelogFile, inspectResult.errors)
+    }
     const unreleasedLinkRegex = /^.*\[Unreleased\]:\s+?(?<url>.*)$/m
     const githubUrlRegex =
         /^https:\/\/github\.com\/(?<owner>\S+?)\/(?<name>\S+?)\/(?<path>.*)$/
@@ -67,7 +72,7 @@ export async function nextVersionRollover(args: Array<string>): Promise<void> {
 
     let result = changelogContent.replace(
         /## \[Unreleased\]/,
-        `## [Unreleased]\n\n- ???\n\n## [${opts.nextVersion}] - ${getCurrentDate()}`,
+        `## [Unreleased]\n\n${inspectResult.listMarker} ???\n\n## [${opts.nextVersion}] - ${getCurrentDate()}`,
     )
 
     if (

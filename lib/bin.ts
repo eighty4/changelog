@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { CliError } from './error.ts'
+import { BadChangelogError, CliError } from './errors.ts'
+import type { ChangelogErrorKind } from './inspect.ts'
 import { checkUnreleased } from './task.check.ts'
 import { getVersionContent } from './task.get.ts'
 import { makeNewChangelog } from './task.new.ts'
@@ -100,10 +101,56 @@ function printError(e: unknown) {
             console.error(red('error:'), e)
         } else if (e instanceof Error) {
             console.error(red('error:'), e.message)
-            if (e instanceof CliError) {
+            if (e instanceof BadChangelogError) {
+                for (const error of e.errors) {
+                    const { excerpt, kind, line } = error
+                    console.error(
+                        `  at line ${line}, ${changelogErrorDescription(kind)}`,
+                    )
+                    const correction = changelogErrorCorrection(kind, excerpt)
+                    if (correction) {
+                        console.error(
+                            `     \`${excerpt}\` -> \`${correction}\``,
+                        )
+                    } else {
+                        console.error(`     \`${excerpt}\``)
+                    }
+                }
+            } else if (e instanceof CliError) {
                 console.log('changelog -h for more details')
             }
         }
+    }
+}
+
+function changelogErrorDescription(kind: ChangelogErrorKind): string {
+    switch (kind) {
+        case 'release-header':
+            return 'release header is not valid'
+        case 'version-brackets':
+            return 'release version must be in Markdown link brackets'
+        case 'version-semver':
+            return 'release version is not valid semver'
+    }
+}
+
+function changelogErrorCorrection(
+    kind: ChangelogErrorKind,
+    excerpt: string,
+): string | undefined {
+    switch (kind) {
+        case 'version-brackets':
+            return excerpt
+                .split(/\s+/)
+                .map((s, i) => (i === 1 ? `[${s}]` : s))
+                .join(' ')
+        case 'version-semver':
+            return excerpt
+                .split(/\s+/)
+                .map((s, i) => (i === 1 ? '[v0.12.8]' : s))
+                .join(' ')
+        default:
+            return undefined
     }
 }
 

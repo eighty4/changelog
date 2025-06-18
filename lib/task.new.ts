@@ -1,4 +1,4 @@
-import { CliError } from './error.ts'
+import { CliError } from './errors.ts'
 
 // todo alt cfg with `git remote get-url origin`
 export type MakeNewOpts = {

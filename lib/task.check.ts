@@ -1,4 +1,5 @@
-import { CliError } from './error.ts'
+import { BadChangelogError, CliError } from './errors.ts'
+import { inspectChangelog } from './inspect.ts'
 import { readChangelogFile } from './readChangelog.ts'
 
 export type CheckUnreleasedOpts = {
@@ -28,6 +29,10 @@ export function parseArgs(args: Array<string>): CheckUnreleasedOpts {
 export async function checkUnreleased(args: Array<string>): Promise<boolean> {
     const opts = parseArgs(args)
     const changelogContent = await readChangelogFile(opts.changelogFile)
+    const inspectResult = inspectChangelog(changelogContent)
+    if (inspectResult.errors.length) {
+        throw new BadChangelogError(opts.changelogFile, inspectResult.errors)
+    }
     const notes = /## \[Unreleased\](?<notes>[\s\S]+?)(?=\s+(## |\[))/
         .exec(changelogContent)
         ?.groups?.notes?.trim()

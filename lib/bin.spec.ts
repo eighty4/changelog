@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
-import { CliError } from './error.ts'
+import { CliError } from './errors.ts'
 import {
     getCurrentDate,
     nextVersionRollover,
@@ -111,7 +111,7 @@ describe('changelog cli', () => {
 
 - ???
 
-## [v0.0.1] - 2025-06-12
+## [v0.0.1] - ${getCurrentDate()}
 
 ### Added
 

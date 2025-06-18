@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
-import { CliError } from './error.ts'
+import { CliError } from './errors.ts'
 import { checkUnreleased, parseArgs } from './task.check.ts'
 
 async function makeTempDir(): Promise<string> {

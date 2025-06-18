@@ -1,4 +1,5 @@
-import { CliError } from './error.ts'
+import { BadChangelogError, CliError } from './errors.ts'
+import { inspectChangelog } from './inspect.ts'
 import { readChangelogFile } from './readChangelog.ts'
 import { isSemverVersion } from './semver.ts'
 
@@ -38,6 +39,10 @@ export function parseArgs(args: Array<string>): GetContentOpts {
 export async function getVersionContent(args: Array<string>): Promise<string> {
     const opts = parseArgs(args)
     const changelogContent = await readChangelogFile(opts.changelogFile)
+    const inspectResult = inspectChangelog(changelogContent)
+    if (inspectResult.errors.length) {
+        throw new BadChangelogError(opts.changelogFile, inspectResult.errors)
+    }
     const versionStartStr = `## [${opts.version}]`
     const versionStart = changelogContent.indexOf(versionStartStr)
     if (versionStart === -1) {

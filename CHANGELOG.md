@@ -2,7 +2,12 @@
 
 ## [Unreleased]
 
-- ???
+### Added
+
+- Validating CHANGELOG.md before every task to ensure reliable results from
+  tasks
+- Reporting for CHANGELOG.md errors include line numbers, excerpts and
+  correction suggestions
 
 ## [v0.0.5] - 2025-06-12
 

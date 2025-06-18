@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { CliError } from './error.ts'
+import { CliError } from './errors.ts'
 import { makeNewChangelog, parseArgs } from './task.new.ts'
 
 describe('changelog new', () => {
