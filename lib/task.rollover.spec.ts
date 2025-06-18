@@ -34,6 +34,14 @@ describe('changelog rollover', () => {
                     e.message === 'Skynet3.0 is not a `vX.X.X` format semver',
             )
         })
+        it('rejects prerelease semver', () => {
+            assert.throws(
+                () => parseArgs(['v0.0.2-0']),
+                e =>
+                    e instanceof CliError &&
+                    e.message === 'v0.0.2-0 is not a `vX.X.X` format semver',
+            )
+        })
         it('err with --changelog-file missing value', () => {
             assert.throws(
                 () => parseArgs(['v0.0.1', '--changelog-file']),

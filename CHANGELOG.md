@@ -11,6 +11,10 @@
 - `changelog rollover` will preserve consistent Markdown list notation with
   the user's existing CHANGELOG.md content
 
+### Fixed
+
+- Error when `changelog rollover VERSION` is run with a prerelease semver
+
 ## [v0.0.5] - 2025-06-12
 
 ### Added
