@@ -1,3 +1,3 @@
 [31merror:[0m CHANGELOG.md is not valid
   at line 3, release version must be in Markdown link brackets
-     `## Unreleased` -> `## [Unreleased]`
+    ## Unreleased -> ## [32m[[0mUnreleased[32m][0m

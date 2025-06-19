@@ -96,7 +96,6 @@ function printHelp(error?: string): never {
 
 function printError(e: unknown) {
     if (e !== null) {
-        const red = (s: string) => `\u001b[31m${s}\u001b[0m`
         if (typeof e === 'string') {
             console.error(red('error:'), e)
         } else if (e instanceof Error) {
@@ -107,14 +106,9 @@ function printError(e: unknown) {
                     console.error(
                         `  at line ${line}, ${changelogErrorDescription(kind)}`,
                     )
-                    const correction = changelogErrorCorrection(kind, excerpt)
-                    if (correction) {
-                        console.error(
-                            `     \`${excerpt}\` -> \`${correction}\``,
-                        )
-                    } else {
-                        console.error(`     \`${excerpt}\``)
-                    }
+                    console.error(
+                        `    ${changelogErrorCorrection(kind, excerpt)}`,
+                    )
                 }
             } else if (e instanceof CliError) {
                 console.log('changelog -h for more details')
@@ -130,7 +124,7 @@ function changelogErrorDescription(kind: ChangelogErrorKind): string {
         case 'version-brackets':
             return 'release version must be in Markdown link brackets'
         case 'version-semver':
-            return 'release version is not valid semver'
+            return 'release version is not a valid semver'
     }
 }
 
@@ -140,18 +134,29 @@ function changelogErrorCorrection(
 ): string | undefined {
     switch (kind) {
         case 'version-brackets':
-            return excerpt
+            return `${excerpt} -> ${excerpt
                 .split(/\s+/)
-                .map((s, i) => (i === 1 ? `[${s}]` : s))
-                .join(' ')
+                .map((s, i) => (i === 1 ? `${green('[')}${s}${green(']')}` : s))
+                .join(' ')}`
         case 'version-semver':
-            return excerpt
+            return `${excerpt
                 .split(/\s+/)
-                .map((s, i) => (i === 1 ? '[v0.12.8]' : s))
-                .join(' ')
+                .map((s, i) => (i === 1 ? red(s) : s))
+                .join(' ')} -> ${excerpt
+                .split(/\s+/)
+                .map((s, i) => (i === 1 ? green('[vX.X.X]') : s))
+                .join(' ')}`
         default:
-            return undefined
+            return excerpt
     }
+}
+
+function green(s: string): string {
+    return `\u001b[32m${s}\u001b[0m`
+}
+
+function red(s: string): string {
+    return `\u001b[31m${s}\u001b[0m`
 }
 
 function errorExit(e?: unknown): never {

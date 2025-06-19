@@ -4,6 +4,7 @@
 
 ### Added
 
+- Diff highlighting with ANSI colors for CHANGELOG.md error corrections
 - All tasks support Markdown unordered lists using `*`, `-` or `+`
 
 ## [v0.0.6] - 2025-06-19
