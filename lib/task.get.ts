@@ -63,12 +63,12 @@ export async function getVersionContent(args: Array<string>): Promise<string> {
     let result = ''
     let categoryLines: Array<string> = []
     const mergeCategoryIntoResult = () => {
-        if (categoryLines.some(l => l.startsWith('-'))) {
+        if (categoryLines.some(l => /^(\*|\-|\+)/.test(l))) {
             result += categoryLines.join('\n')
         }
     }
     for (const l of notes.split(/\r?\n/).map(l => l.trim())) {
-        if (opts.version === 'Unreleased' && l === '- ???') {
+        if (opts.version === 'Unreleased' && /^(\*|\-|\+) \?\?\?$/.test(l)) {
             continue
         }
         if (l.startsWith('### ')) {

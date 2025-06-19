@@ -95,6 +95,25 @@ describe('changelog get', () => {
             return p
         }
 
+        describe('list marker support', () => {
+            for (const listMarker of ['*', '-', '+']) {
+                it(`matches ${listMarker}`, async () => {
+                    const p = await makeFile(
+                        'CHANGELOG.md',
+                        `## [v0.0.2]\n\n${listMarker} real work`,
+                    )
+                    assert.equal(
+                        await getVersionContent([
+                            'v0.0.2',
+                            '--changelog-file',
+                            p,
+                        ]),
+                        `${listMarker} real work`,
+                    )
+                })
+            }
+        })
+
         describe('with change categories', () => {
             it('throws error when empty', async () => {
                 const p = await makeFile(

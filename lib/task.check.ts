@@ -45,7 +45,7 @@ export async function checkUnreleased(args: Array<string>): Promise<boolean> {
                 return false
             }
             l = l.trim()
-            return l.length && l !== '- ???'
+            return l.length && !/^(\*|\-|\+)\s\?\?\?$/.test(l)
         }).length > 0
     )
 }

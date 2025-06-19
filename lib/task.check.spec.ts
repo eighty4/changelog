@@ -64,6 +64,27 @@ describe('changelog check', () => {
             return p
         }
 
+        describe('list marker support', () => {
+            for (const listMarker of ['*', '-', '+']) {
+                for (const unreleasedContent of ['???', 'content']) {
+                    it(`matches ${listMarker} ${unreleasedContent}`, async () => {
+                        const p = await makeFile(
+                            'CHANGELOG.md',
+                            `## [Unreleased]
+${listMarker} ${unreleasedContent}
+## [v0.0.2]
+${listMarker} real work`,
+                        )
+                        assert.equal(
+                            await checkUnreleased(['--changelog-file', p]),
+                            unreleasedContent !== '???',
+                            `${listMarker} ${unreleasedContent}`,
+                        )
+                    })
+                }
+            }
+        })
+
         describe('with change categories', () => {
             it('returns true', async () => {
                 const p = await makeFile(
