@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- ???
+
+## [v0.0.7] - 2025-06-19
+
 ### Added
 
 - Diff highlighting with ANSI colors for CHANGELOG.md error corrections
@@ -56,7 +60,8 @@
 - `changelog get VERSION` retrieves release notes for `VERSION`
 - `changelog rollover NEXT_VERSION` creates a new unreleased section and relabels unreleased changes with `NEXT_VERSION`
 
-[Unreleased]: https://github.com/eighty4/changelog/compare/v0.0.6...HEAD
+[Unreleased]: https://github.com/eighty4/changelog/compare/v0.0.7...HEAD
+[v0.0.7]: https://github.com/eighty4/changelog/compare/v0.0.6...v0.0.7
 [v0.0.6]: https://github.com/eighty4/changelog/compare/v0.0.5...v0.0.6
 [v0.0.5]: https://github.com/eighty4/changelog/compare/v0.0.4...v0.0.5
 [v0.0.4]: https://github.com/eighty4/changelog/compare/v0.0.3...v0.0.4
