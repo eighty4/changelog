@@ -13,7 +13,8 @@
 
 ### Fixed
 
-- Error when `changelog rollover VERSION` is run with a prerelease semver
+- `changelog rollover v0.0.2-0` will now error when running `rollover` with a
+  prerelease semver
 
 ## [v0.0.5] - 2025-06-12
 
