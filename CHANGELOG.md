@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- ???
+
+## [v0.0.8] - 2025-06-30
+
 ### Added
 
 - JS, TS and type definition exports for Bun and Node runtimes
@@ -62,7 +66,8 @@
 - `changelog get VERSION` retrieves release notes for `VERSION`
 - `changelog rollover NEXT_VERSION` creates a new unreleased section and relabels unreleased changes with `NEXT_VERSION`
 
-[Unreleased]: https://github.com/eighty4/changelog/compare/v0.0.7...HEAD
+[Unreleased]: https://github.com/eighty4/changelog/compare/v0.0.8...HEAD
+[v0.0.8]: https://github.com/eighty4/changelog/compare/v0.0.7...v0.0.8
 [v0.0.7]: https://github.com/eighty4/changelog/compare/v0.0.6...v0.0.7
 [v0.0.6]: https://github.com/eighty4/changelog/compare/v0.0.5...v0.0.6
 [v0.0.5]: https://github.com/eighty4/changelog/compare/v0.0.4...v0.0.5
