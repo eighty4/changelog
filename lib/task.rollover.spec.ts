@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, it } from 'node:test'
 import { CliError } from './errors.ts'
 import {
     getCurrentDate,
-    nextVersionRollover,
+    nextVersionRolloverFromCliArgs,
     parseArgs,
 } from './task.rollover.ts'
 
@@ -83,7 +83,7 @@ describe('changelog rollover', () => {
         })
     })
 
-    describe('nextVersionRollover', () => {
+    describe('nextVersionRolloverFromCliArgs', () => {
         let tmpDir: string
 
         beforeEach(async () => {
@@ -116,7 +116,11 @@ describe('changelog rollover', () => {
 [Unreleased]: https://github.com/eighty4/c2/commits/main
 `,
                 )
-                await nextVersionRollover([tag, '--changelog-file', p]),
+                await nextVersionRolloverFromCliArgs([
+                    tag,
+                    '--changelog-file',
+                    p,
+                ]),
                     assert.equal(
                         await readFile(p, 'utf-8'),
                         `
@@ -158,7 +162,11 @@ describe('changelog rollover', () => {
 `,
                 )
 
-                await nextVersionRollover([tag, '--changelog-file', p])
+                await nextVersionRolloverFromCliArgs([
+                    tag,
+                    '--changelog-file',
+                    p,
+                ])
                 assert.equal(
                     await readFile(p, 'utf-8'),
                     `
@@ -199,7 +207,11 @@ describe('changelog rollover', () => {
 [Unreleased]: https://github.com/eighty4/c2/commits/main
 `,
                 )
-                await nextVersionRollover([tag, '--changelog-file', p])
+                await nextVersionRolloverFromCliArgs([
+                    tag,
+                    '--changelog-file',
+                    p,
+                ])
                 assert.equal(
                     await readFile(p, 'utf-8'),
                     `
@@ -235,7 +247,11 @@ describe('changelog rollover', () => {
 `,
                 )
 
-                await nextVersionRollover([tag, '--changelog-file', p])
+                await nextVersionRolloverFromCliArgs([
+                    tag,
+                    '--changelog-file',
+                    p,
+                ])
                 assert.equal(
                     await readFile(p, 'utf-8'),
                     `
@@ -275,7 +291,11 @@ ${listMarker} did more stuff
 `,
                     )
 
-                    await nextVersionRollover(['v0.0.1', '--changelog-file', p])
+                    await nextVersionRolloverFromCliArgs([
+                        'v0.0.1',
+                        '--changelog-file',
+                        p,
+                    ])
                     assert.equal(
                         await readFile(p, 'utf-8'),
                         `
@@ -313,7 +333,7 @@ ${listMarker} did more stuff
 `,
                 )
 
-                await nextVersionRollover([
+                await nextVersionRolloverFromCliArgs([
                     version,
                     '--changelog-file',
                     p,
@@ -361,7 +381,7 @@ ${listMarker} did more stuff
 `,
                 )
 
-                await nextVersionRollover([
+                await nextVersionRolloverFromCliArgs([
                     version,
                     '--changelog-file',
                     p,

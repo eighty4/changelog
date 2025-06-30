@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
 import { CliError } from './errors.ts'
-import { getVersionContent, parseArgs } from './task.get.ts'
+import { getVersionContentFromCliArgs, parseArgs } from './task.get.ts'
 
 async function makeTempDir(): Promise<string> {
     return await mkdtemp(join(tmpdir(), 'changelog-test-'))
@@ -77,7 +77,7 @@ describe('changelog get', () => {
         })
     })
 
-    describe('getVersionContent', () => {
+    describe('getVersionContentFromCliArgs', () => {
         let tmpDir: string
 
         beforeEach(async () => {
@@ -103,7 +103,7 @@ describe('changelog get', () => {
                         `## [v0.0.2]\n\n${listMarker} real work`,
                     )
                     assert.equal(
-                        await getVersionContent([
+                        await getVersionContentFromCliArgs([
                             'v0.0.2',
                             '--changelog-file',
                             p,
@@ -122,7 +122,7 @@ describe('changelog get', () => {
                 )
                 await assert.rejects(
                     () =>
-                        getVersionContent([
+                        getVersionContentFromCliArgs([
                             'Unreleased',
                             '--changelog-file',
                             p,
@@ -151,7 +151,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -175,7 +175,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -197,7 +197,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -225,7 +225,11 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent(['v0.0.1', '--changelog-file', p]),
+                    await getVersionContentFromCliArgs([
+                        'v0.0.1',
+                        '--changelog-file',
+                        p,
+                    ]),
                     '### Added\n\n- big feature\n- a bug',
                 )
             })
@@ -249,7 +253,11 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent(['v0.0.1', '--changelog-file', p]),
+                    await getVersionContentFromCliArgs([
+                        'v0.0.1',
+                        '--changelog-file',
+                        p,
+                    ]),
                     '### Added\n\n- big feature\n- a bug',
                 )
             })
@@ -273,7 +281,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -304,7 +312,11 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent(['v0.0.1', '--changelog-file', p]),
+                    await getVersionContentFromCliArgs([
+                        'v0.0.1',
+                        '--changelog-file',
+                        p,
+                    ]),
                     '### Removed\n\n- big feature\n- a bug',
                 )
             })
@@ -326,7 +338,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -341,7 +353,7 @@ describe('changelog get', () => {
                 const p = await makeFile('CHANGELOG.md', '## [v0.0.3]\n\n\n')
                 await assert.rejects(
                     () =>
-                        getVersionContent([
+                        getVersionContentFromCliArgs([
                             'Unreleased',
                             '--changelog-file',
                             p,
@@ -357,7 +369,7 @@ describe('changelog get', () => {
                 )
                 await assert.rejects(
                     () =>
-                        getVersionContent([
+                        getVersionContentFromCliArgs([
                             'Unreleased',
                             '--changelog-file',
                             p,
@@ -384,7 +396,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -406,7 +418,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -426,7 +438,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -452,7 +464,11 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent(['v0.0.1', '--changelog-file', p]),
+                    await getVersionContentFromCliArgs([
+                        'v0.0.1',
+                        '--changelog-file',
+                        p,
+                    ]),
                     '- big feature\n- a bug',
                 )
             })
@@ -474,7 +490,11 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent(['v0.0.1', '--changelog-file', p]),
+                    await getVersionContentFromCliArgs([
+                        'v0.0.1',
+                        '--changelog-file',
+                        p,
+                    ]),
                     '- big feature\n- a bug',
                 )
             })
@@ -496,7 +516,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -520,7 +540,7 @@ describe('changelog get', () => {
 `,
                 )
                 assert.equal(
-                    await getVersionContent([
+                    await getVersionContentFromCliArgs([
                         'Unreleased',
                         '--changelog-file',
                         p,
@@ -547,7 +567,12 @@ describe('changelog get', () => {
 `,
             )
             await assert.rejects(
-                () => getVersionContent(['v0.0.2', '--changelog-file', p]),
+                () =>
+                    getVersionContentFromCliArgs([
+                        'v0.0.2',
+                        '--changelog-file',
+                        p,
+                    ]),
                 e => e.message === 'v0.0.2 not found',
             )
         })

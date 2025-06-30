@@ -45,8 +45,13 @@ export function parseArgs(args: Array<string>): RolloverOpts {
     return opts
 }
 
-export async function nextVersionRollover(args: Array<string>): Promise<void> {
-    const opts = parseArgs(args)
+export async function nextVersionRolloverFromCliArgs(
+    args: Array<string>,
+): Promise<void> {
+    await nextVersionRollover(parseArgs(args))
+}
+
+export async function nextVersionRollover(opts: RolloverOpts): Promise<void> {
     const changelogContent = await readChangelogFile(opts.changelogFile)
     const inspectResult = inspectChangelog(changelogContent)
     if (inspectResult.errors.length) {

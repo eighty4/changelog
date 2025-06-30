@@ -1,3 +1,5 @@
+import type { ChangelogError } from './errors.ts'
+
 // todo other types of inspections
 //  [vSEMVER] headers match git tag format (and error if no --git-tag)
 //  [vSEMVER] headers all have valid links
@@ -10,16 +12,6 @@ export type InspectResult = {
 // export type DateFormat = 'dmy' | 'mdy' | 'ymd'
 
 export type ListMarker = '*' | '-' | '+'
-
-export type ChangelogError = {
-    excerpt: string
-    kind: ChangelogErrorKind
-    line: number
-}
-
-export type ChangelogErrorKind =
-    // | 'date-invalid'
-    'version-semver' | 'version-brackets' | 'release-header'
 
 const IS_LIST_MARKER = /^[\*\-\+]\s/
 // const IS_DATE_DMY = /^(0?\d|2\d|3[1-2])-(0?\d|1[0-2])-(19|20)\d\d$/

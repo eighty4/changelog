@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { CliError } from './errors.ts'
-import { makeNewChangelog, parseArgs } from './task.new.ts'
+import { makeNewChangelogFromCliArgs, parseArgs } from './task.new.ts'
 
 describe('changelog new', () => {
     describe('parseArgs', () => {
@@ -21,7 +21,7 @@ describe('changelog new', () => {
         })
     })
 
-    describe('makeNewChangelog', () => {
+    describe('makeNewChangelogFromCliArgs', () => {
         it('returns changelog content', () => {
             const expected = `# Changelog
 
@@ -35,7 +35,7 @@ describe('changelog new', () => {
 `
 
             assert.deepEqual(
-                makeNewChangelog(['--repo', 'eighty4/changelog']),
+                makeNewChangelogFromCliArgs(['--repo', 'eighty4/changelog']),
                 expected,
             )
         })

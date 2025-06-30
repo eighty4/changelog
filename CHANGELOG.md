@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-- ???
+### Added
+
+- JS, TS and type definition exports for Bun and Node runtimes
 
 ## [v0.0.7] - 2025-06-19
 

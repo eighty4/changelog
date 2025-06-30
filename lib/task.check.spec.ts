@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
 import { CliError } from './errors.ts'
-import { checkUnreleased, parseArgs } from './task.check.ts'
+import { checkUnreleasedFromCliArgs, parseArgs } from './task.check.ts'
 
 async function makeTempDir(): Promise<string> {
     return await mkdtemp(join(tmpdir(), 'changelog-test-'))
@@ -46,7 +46,7 @@ describe('changelog check', () => {
         })
     })
 
-    describe('checkUnreleased', () => {
+    describe('checkUnreleasedFromCliArgs', () => {
         let tmpDir: string
 
         beforeEach(async () => {
@@ -76,7 +76,10 @@ ${listMarker} ${unreleasedContent}
 ${listMarker} real work`,
                         )
                         assert.equal(
-                            await checkUnreleased(['--changelog-file', p]),
+                            await checkUnreleasedFromCliArgs([
+                                '--changelog-file',
+                                p,
+                            ]),
                             unreleasedContent !== '???',
                             `${listMarker} ${unreleasedContent}`,
                         )
@@ -100,7 +103,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     true,
                 )
             })
@@ -119,7 +122,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     false,
                 )
             })
@@ -138,7 +141,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     false,
                 )
             })
@@ -157,7 +160,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     true,
                 )
             })
@@ -172,7 +175,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     false,
                 )
             })
@@ -187,7 +190,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     false,
                 )
             })
@@ -208,7 +211,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     true,
                 )
             })
@@ -225,7 +228,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     false,
                 )
             })
@@ -244,7 +247,7 @@ ${listMarker} real work`,
 `,
                 )
                 assert.equal(
-                    await checkUnreleased(['--changelog-file', p]),
+                    await checkUnreleasedFromCliArgs(['--changelog-file', p]),
                     false,
                 )
             })

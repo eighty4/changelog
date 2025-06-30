@@ -1,4 +1,12 @@
-import type { ChangelogError } from './inspect.ts'
+export type ChangelogError = {
+    excerpt: string
+    kind: ChangelogErrorKind
+    line: number
+}
+
+export type ChangelogErrorKind =
+    // | 'date-invalid'
+    'version-semver' | 'version-brackets' | 'release-header'
 
 export class BadChangelogError extends Error {
     changelogFile: string

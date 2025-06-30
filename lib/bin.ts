@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
-import { BadChangelogError, CliError } from './errors.ts'
-import type { ChangelogErrorKind } from './inspect.ts'
-import { checkUnreleased } from './task.check.ts'
-import { getVersionContent } from './task.get.ts'
-import { makeNewChangelog } from './task.new.ts'
-import { nextVersionRollover } from './task.rollover.ts'
+import {
+    BadChangelogError,
+    type ChangelogErrorKind,
+    CliError,
+} from './errors.ts'
+import { checkUnreleasedFromCliArgs } from './task.check.ts'
+import { getVersionContentFromCliArgs } from './task.get.ts'
+import { makeNewChangelogFromCliArgs } from './task.new.ts'
+import { nextVersionRolloverFromCliArgs } from './task.rollover.ts'
 
 if (process.argv.find(a => a === '--debug-args')) {
     console.log(JSON.stringify(process.argv, null, 4))
@@ -57,15 +60,15 @@ switch ((shifted = args.shift())) {
 try {
     switch (task) {
         case 'check':
-            process.exit((await checkUnreleased(args)) ? 0 : 1)
+            process.exit((await checkUnreleasedFromCliArgs(args)) ? 0 : 1)
         case 'get':
-            console.log(await getVersionContent(args))
+            console.log(await getVersionContentFromCliArgs(args))
             process.exit(0)
         case 'new':
-            console.log(makeNewChangelog(args))
+            console.log(makeNewChangelogFromCliArgs(args))
             process.exit(0)
         case 'rollover':
-            await nextVersionRollover(args)
+            await nextVersionRolloverFromCliArgs(args)
             process.exit(0)
     }
 } catch (e: unknown) {

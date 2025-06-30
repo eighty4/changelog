@@ -30,9 +30,11 @@ export function parseArgs(args: Array<string>): MakeNewOpts {
     return opts as MakeNewOpts
 }
 
-export function makeNewChangelog(args: Array<string>): string {
-    const opts = parseArgs(args)
+export function makeNewChangelogFromCliArgs(args: Array<string>): string {
+    return makeNewChangelog(parseArgs(args))
+}
 
+export function makeNewChangelog(opts: MakeNewOpts): string {
     return `# Changelog
 
 ## [Unreleased]

@@ -20,11 +20,11 @@
   },
   "exports": {
     ".": {
-      "bun": "./lib/tasks.ts",
-      "node": "./lib_js/tasks.js"
+      "bun": "./lib/api.ts",
+      "node": "./lib_js/api.js",
+      "types": "./lib_types/api.d.ts"
     }
   },
-  "types": "./lib_types",
   "scripts": {
     "build": "tsc",
     "devcheck": "pnpm fmt && pnpm build && pnpm test",
@@ -44,6 +44,7 @@
   },
   "files": [
     "lib/*",
+    "!lib/*.spec.ts",
     "lib_js/*",
     "lib_types/*",
     "tsconfig.json",

@@ -26,8 +26,15 @@ export function parseArgs(args: Array<string>): CheckUnreleasedOpts {
     return opts
 }
 
-export async function checkUnreleased(args: Array<string>): Promise<boolean> {
-    const opts = parseArgs(args)
+export async function checkUnreleasedFromCliArgs(
+    args: Array<string>,
+): Promise<boolean> {
+    return await checkUnreleased(parseArgs(args))
+}
+
+export async function checkUnreleased(
+    opts: CheckUnreleasedOpts,
+): Promise<boolean> {
     const changelogContent = await readChangelogFile(opts.changelogFile)
     const inspectResult = inspectChangelog(changelogContent)
     if (inspectResult.errors.length) {

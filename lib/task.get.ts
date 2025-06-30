@@ -36,8 +36,13 @@ export function parseArgs(args: Array<string>): GetContentOpts {
     return opts
 }
 
-export async function getVersionContent(args: Array<string>): Promise<string> {
-    const opts = parseArgs(args)
+export async function getVersionContentFromCliArgs(
+    args: Array<string>,
+): Promise<string> {
+    return await getVersionContent(parseArgs(args))
+}
+
+export async function getVersionContent(opts: GetContentOpts): Promise<string> {
     const changelogContent = await readChangelogFile(opts.changelogFile)
     const inspectResult = inspectChangelog(changelogContent)
     if (inspectResult.errors.length) {
