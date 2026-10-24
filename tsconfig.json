@@ -7,19 +7,18 @@
     "declarationDir": "lib_types",
     "target": "ESNext",
     "module": "NodeNext",
+    "types": ["node"],
+    "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
-    "composite": true,
-    "incremental": true,
     "erasableSyntaxOnly": true,
 
     /* Linting */
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true,
     "verbatimModuleSyntax": true
   }
 }

@@ -116,14 +116,15 @@ describe('changelog rollover', () => {
 [Unreleased]: https://github.com/eighty4/c2/commits/main
 `,
                 )
+
                 await nextVersionRolloverFromCliArgs([
                     tag,
                     '--changelog-file',
                     p,
-                ]),
-                    assert.equal(
-                        await readFile(p, 'utf-8'),
-                        `
+                ])
+                assert.equal(
+                    await readFile(p, 'utf-8'),
+                    `
 ## [Unreleased]
 
 - ???
@@ -137,7 +138,7 @@ describe('changelog rollover', () => {
 [Unreleased]: https://github.com/eighty4/c2/compare/v0.0.1...HEAD
 [v0.0.1]: https://github.com/eighty4/c2/releases/tag/v0.0.1
 `,
-                    )
+                )
             })
 
             it('adds another tag', async () => {
