@@ -10,6 +10,19 @@ describe('changelog new', () => {
         })
         it('err with invalid --repo', () => {
             assert.throws(() => parseArgs(['--repo', 'bunk']), CliError)
+            assert.throws(
+                () => parseArgs(['--repo', 'https://gitlab.com/no/why']),
+                CliError,
+            )
+            assert.throws(
+                () =>
+                    parseArgs(['--repo', 'https://www.github.com/really/dude']),
+                CliError,
+            )
+            assert.throws(
+                () => parseArgs(['--repo', 'https://github.com/just/cant/']),
+                CliError,
+            )
         })
         it('err with extra arg', () => {
             assert.throws(() => parseArgs(['--bunk']), CliError)
@@ -18,6 +31,12 @@ describe('changelog new', () => {
             assert.deepEqual(parseArgs(['--repo', 'eighty4/changelog']), {
                 repo: 'eighty4/changelog',
             })
+            assert.deepEqual(
+                parseArgs(['--repo', 'https://github.com/eighty4/changelog']),
+                {
+                    repo: 'eighty4/changelog',
+                },
+            )
         })
     })
 

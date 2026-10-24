@@ -12,9 +12,16 @@ export function parseArgs(args: Array<string>): MakeNewOpts {
         switch (shifted) {
             case '--repo':
                 const repo = args.shift()
-                if (!!repo && /[a-z\d]*\/[a-z\d]*/.test(repo)) {
-                    opts.repo = repo
-                } else {
+                if (!!repo) {
+                    if (/^[a-z\d]*\/[a-z\d]*$/.test(repo)) {
+                        opts.repo = repo
+                    } else if (
+                        /^https:\/\/github\.com\/[a-z\d]*\/[a-z\d]*$/.test(repo)
+                    ) {
+                        opts.repo = repo.substring('https://github.com/'.length)
+                    }
+                }
+                if (!opts.repo) {
                     throw new CliError(
                         '--repo must be a `eighty4/changelog` style GitHub repository name',
                     )

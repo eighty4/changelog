@@ -2,7 +2,14 @@
 
 ## [Unreleased]
 
-- ???
+### Added
+
+- `changelog new` allows specifying `--repo https://github.com/eighty4/changelog`
+  full repo URLs as well as already supported `eighty4/chagelog` style repo names
+
+### Fixed
+
+- `changelog new` corrects pattern matching on `--repo` to use `^` and `$`
 
 ## [v0.0.8] - 2025-06-30
 
