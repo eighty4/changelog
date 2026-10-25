@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["lib/**/*.spec.ts"],
+  "compilerOptions": {
+    "rootDir": "lib",
+    "outDir": "lib_js",
+    "declarationDir": "lib_types",
+    "declaration": true,
+    "noEmit": false
+  }
+}

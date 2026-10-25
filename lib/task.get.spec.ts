@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it } from 'node:test'
@@ -127,7 +127,7 @@ describe('changelog get', () => {
                             '--changelog-file',
                             p,
                         ]),
-                    e => e.message === 'Unreleased not found',
+                    (e: any) => e.message === 'Unreleased not found',
                 )
             })
 
@@ -272,7 +272,7 @@ describe('changelog get', () => {
 
 - ???
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 - big feature
 - a bug
@@ -298,7 +298,7 @@ describe('changelog get', () => {
 
 ### Added
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 ### Added
 
@@ -329,7 +329,7 @@ describe('changelog get', () => {
 
 ### Added
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 - big feature
 - a bug
@@ -358,7 +358,7 @@ describe('changelog get', () => {
                             '--changelog-file',
                             p,
                         ]),
-                    e => e.message === 'Unreleased not found',
+                    (e: any) => e.message === 'Unreleased not found',
                 )
             })
 
@@ -374,7 +374,7 @@ describe('changelog get', () => {
                             '--changelog-file',
                             p,
                         ]),
-                    e => e.message === 'Unreleased not found',
+                    (e: any) => e.message === 'Unreleased not found',
                 )
             })
 
@@ -481,7 +481,7 @@ describe('changelog get', () => {
 
 - ???
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 - big feature
 - a bug
@@ -507,7 +507,7 @@ describe('changelog get', () => {
 
 - ???
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 - big feature
 - a bug
@@ -531,7 +531,7 @@ describe('changelog get', () => {
                     `
 ## [Unreleased]
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 - big feature
 - a bug
@@ -558,7 +558,7 @@ describe('changelog get', () => {
 
 - ???
 
-## [v0.0.1] - 2025-04-21 
+## [v0.0.1] - 2025-04-21
 
 - big feature
 - a bug
@@ -573,7 +573,7 @@ describe('changelog get', () => {
                         '--changelog-file',
                         p,
                     ]),
-                e => e.message === 'v0.0.2 not found',
+                (e: any) => e.message === 'v0.0.2 not found',
             )
         })
     })

@@ -10,7 +10,7 @@ export function parseArgs(args: Array<string>): CheckUnreleasedOpts {
     const opts: CheckUnreleasedOpts = {
         changelogFile: 'CHANGELOG.md',
     }
-    let shifted
+    let shifted: string | undefined
     while ((shifted = args.shift())) {
         switch (shifted) {
             case '--changelog-file':
